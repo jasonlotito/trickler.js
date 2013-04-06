@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<link rel="stylesheet" href="css/Trickler.css"/>
+<style type="text/css">
+body {
+  background: #eee;
+}
+</style>
+</head>
+<body>
+
+<div id="trickler"></div>
+
+
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.easing.js"></script>
+<script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="js/jquery.imagesloaded.js"></script>
+<script type="text/javascript" src="js/Trickler.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+  var $trickler = $.trickler($('#trickler'), {
+    addNewRow: function(){
+      getNewRow();
+    }
+  });
+
+
+
+  var getNewRow = function(){
+    $.get('images.json', function(data){
+      console.log(data);
+      var cells = [];
+      for(var x in data) {
+        var img = data[x];
+        cells.push("<img src='img/"+ img.imageUrl +"'>");
+      }
+      $trickler.addNewRow(cells)
+    });
+  };
+
+  getNewRow();
+
+
+
+})
+</script>
+</body>
+</html>

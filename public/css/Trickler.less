@@ -1,0 +1,65 @@
+#trickler {
+
+  display: fixed;
+  position: fixed;
+  top: 10px;
+  border: 3px solid black;
+  margin: 0 auto;
+  bottom: 10px;
+  left: 15%;
+  right: 15%;
+  overflow: scroll;
+  box-shadow: #000 0 0 10px;
+  border-radius: 3px;
+  padding: 0;
+
+  .tScrollDown, .tScrollUp {
+    position: absolute;
+    width: 100%;
+    background: transparent;
+    font-size: 40px;
+    color: transparent;
+    text-align: center;
+    padding-top: 0px;
+    box-sizing: border-box;
+    height: 50px;
+
+    &:hover {
+      color: #fff;
+      background: rgba(33, 33, 33, 0.75);
+      cursor: pointer;
+    }
+  }
+
+  .tScrollDown {
+    padding-bottom: 5px;
+    bottom: 0;
+  }
+
+  .tScrollUp {
+    padding-top: 5px;
+    top: 0;
+  }
+
+  .tricklerRow {
+    margin: 0 auto;
+    width: 100%;
+    overflow: auto;
+    white-space: nowrap;
+
+    ul {
+      width: 100%;
+      max-height: 200px;
+      padding: 0;
+      margin: 0;
+      li {
+        list-style: none;
+        display: inline;
+        img {
+          cursor: pointer;
+          height: 200px;
+        }
+      }
+    }
+  }
+}
