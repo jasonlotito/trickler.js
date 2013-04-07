@@ -5,7 +5,11 @@
 <link rel="stylesheet" href="css/Trickler.css"/>
 <style type="text/css">
 body {
-  background: #eee;
+  background: #333;
+}
+
+.hidden{
+  display: none;
 }
 </style>
 </head>
@@ -21,6 +25,10 @@ body {
 <script type="text/javascript" src="js/jquery.imagesloaded.js"></script>
 <script type="text/javascript" src="js/Trickler.js"></script>
 
+<div id="overlay" class="overlay hidden">
+  <h3>Author Name</h3>
+</div>
+
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -30,23 +38,20 @@ $(document).ready(function(){
     }
   });
 
-
-
   var getNewRow = function(){
     $.get('images.json', function(data){
       console.log(data);
       var cells = [];
+      var $overlay = $('#overlay');
       for(var x in data) {
         var img = data[x];
-        cells.push("<img src='img/"+ img.imageUrl +"'>");
+        cells.push("<img src='img/"+ img.imageUrl +"'>" + $overlay[0].outerHTML);
       }
       $trickler.addNewRow(cells)
     });
   };
 
   getNewRow();
-
-
 
 })
 </script>

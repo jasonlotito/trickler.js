@@ -1,5 +1,10 @@
-#trickler {
+@font: Helvetica;
+.width {
+  width:100%;
+}
 
+#trickler {
+  font-family: @font;
   display: fixed;
   position: fixed;
   top: 10px;
@@ -13,9 +18,21 @@
   border-radius: 3px;
   padding: 0;
 
+  .faded img{
+    opacity: 0.5;
+    z-index: -1000;
+  }
+
+  .trickler-selected img {
+//    opacity: 2.0;
+    box-shadow: lightseagreen 0 0 50px 10px;
+    z-index: 1000;
+    position: relative;
+  }
+
   .tScrollDown, .tScrollUp {
     position: absolute;
-    width: 100%;
+    .width;
     background: transparent;
     font-size: 40px;
     color: transparent;
@@ -55,6 +72,19 @@
       li {
         list-style: none;
         display: inline;
+        position: relative;
+
+        &:hover #overlay {
+          display: inline-block;
+          position: absolute;
+          background: fade(#000, 65%);
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 204px;
+          color: #fff;
+        }
+
         img {
           cursor: pointer;
           height: 200px;

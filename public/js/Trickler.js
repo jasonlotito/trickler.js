@@ -19,11 +19,9 @@
         var init = function () {
             plugin.settings = $.extend({}, defaults, options);
             plugin.el = el;
+            plugin.centering = false;
             template = new Template();
         };
-
-        var tricklerRow = '<div class="tricklerRow"><ul><li><img src="img/photos/1.jpg" alt=""/></li><li><img src="img/photos/2.jpg" alt=""/></li><li><img src="img/photos/3.jpg" alt=""/></li><li><img src="img/photos/4.jpg" alt=""/></li><li><img src="img/photos/5.jpg" alt=""/></li><li><img src="img/photos/6.jpg" alt=""/></li><li><img src="img/photos/7.jpg" alt=""/></li><li><img src="img/photos/8.jpg" alt=""/></li><li><img src="img/photos/9.jpg" alt=""/></li><li><img src="img/photos/10.jpg" alt=""/></li><li><img src="img/photos/11.jpg" alt=""/></li></ul></div>';
-        var $row = $(tricklerRow);
 
         var ALT = 18;
         var trickler = el;
@@ -72,7 +70,11 @@
 
         plugin.addNewRow = function (data) {
             var $newRow = template.renderRow(data)
-            $("#trickler").append($newRow);
+            $newRow.hide();
+            plugin.el.append($newRow);
+            $newRow.show();
+            plugin.el.scrollTop(plugin.el.scrollTop()+200);
+
             mouseWheelEvents($newRow);
             addClickEvents($newRow);
         };
@@ -83,6 +85,8 @@
 
             $element.on('mousewheel', function (event, delta) {
                 event.preventDefault();
+
+                if ( plugin.centering ) return;
 
                 if (MouseEvents.altPressed) {
                     this.scrollLeft -= (delta * 30);
@@ -114,12 +118,42 @@
             });
         }
 
+        function centerRow($row, $selectedCell)
+        {
+            plugin.centering = true;
+            var $container = $row.parent().parent();
+            var width = $container.width();
+            var selectedWidth = $selectedCell.width();
+            console.log(width, selectedWidth);
+            var midPoint = width/2;
+            var offset = -(selectedWidth/2);
+
+            $selectedCell.position();
+            console.log(midPoint + offset - $selectedCell.position().left, $selectedCell.position());
+            $row.parent().scrollLeft(midPoint + offset - $selectedCell.position().left);
+            plugin.centering = false;
+        }
+
+        function handleAssetResetClick() {
+            var $row = $(this).parent().parent();
+            $row.nextUntil().remove();
+            assetClick($(this));
+        }
+
+        function handleAssetClick () {
+            assetClick($(this))
+        }
+
+        function assetClick(e)
+        {
+            e.parent().children().removeClass('trickler-selected').addClass('faded');
+            e.addClass('trickler-selected').removeClass('faded');
+            plugin.settings.addNewRow();
+            e.parent().find('li').off('click').on('click', handleAssetResetClick);
+        }
+
         function addClickEvents($element) {
-            $element.find('li').on('click', function () {
-                $(this).addClass('trickler-selected');
-                plugin.settings.addNewRow();
-                $element.find('li').off('click');
-            });
+            $element.find('li').on('click', handleAssetClick);
         }
 
         init();
