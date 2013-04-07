@@ -7,8 +7,8 @@
             row: $('<div class="tricklerRow"></div>'),
             list: $('<ul></ul>'),
             cell: $('<li></li>'),
-            addNewRow: function () {
-            }
+            addNewRow: function () {},
+            addClickEvents: function($row) {}
         };
 
         plugin.settings = {
@@ -72,7 +72,7 @@
             var $newRow = template.renderRow(data)
             $newRow.hide();
             plugin.el.append($newRow);
-            $newRow.show();
+            $newRow.fadeIn();
             plugin.el.scrollTop(plugin.el.scrollTop()+200);
 
             mouseWheelEvents($newRow);
@@ -136,7 +136,7 @@
 
         function handleAssetResetClick() {
             var $row = $(this).parent().parent();
-            $row.nextUntil().remove();
+            $row.nextUntil().fadeOut().remove();
             assetClick($(this));
         }
 
@@ -154,6 +154,7 @@
 
         function addClickEvents($element) {
             $element.find('li').on('click', handleAssetClick);
+            plugin.settings.addClickEvents($element);
         }
 
         init();

@@ -11,9 +11,30 @@ body {
 .hidden{
   display: none;
 }
+
+#tlightbox {
+  position: absolute;
+  /*width: 100%;*/
+  background-color: rgba(0,0,0,0.4);
+  /*margin: 0 auto;*/
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+
+}
+
+#tlightbox img {
+  box-shadow: #000 0 0 50px;
+  height: 100%;
+  margin: 0 auto;
+  display: block;
+}
 </style>
 </head>
 <body>
+
+<!--<button class="upload">Upload</button>-->
 
 <div id="trickler"></div>
 
@@ -24,18 +45,45 @@ body {
 <script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="js/jquery.imagesloaded.js"></script>
 <script type="text/javascript" src="js/Trickler.js"></script>
+<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
+
+<div id="tlightbox" class="hidden">
+  <img src="#" alt=""/>
+</div>
 
 <div id="overlay" class="overlay hidden">
-  <h3>Author Name</h3>
+  <h3><a class="showImage" href="#">show</a></h3>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function(){
 
+  var startAt = 0;
+  var startAtMid = 12;
+  $(window).on('keyup', function(e){
+    var ESCAPE_KEY = 27;
+    if (e.keyCode === ESCAPE_KEY) {
+      $('#tlightbox').fadeOut();
+    }
+  });
+
+  var showLightbox = function($e){
+    $e.find('.showImage').on('click', function(e){
+      var $el = $(this).parent().parent().parent();
+      e.preventDefault();
+      e.stopPropagation();
+      var $lightbox = $('#tlightbox');
+      $lightbox.removeClass('hidden').show();
+      var image = $el.find('img').attr('src');
+      $lightbox.find('img').attr('src', image);
+    });
+  };
+
   var $trickler = $.trickler($('#trickler'), {
     addNewRow: function(){
       getNewRow();
-    }
+    },
+    addClickEvents: showLightbox
   });
 
   var getNewRow = function(){
@@ -43,15 +91,44 @@ $(document).ready(function(){
       console.log(data);
       var cells = [];
       var $overlay = $('#overlay');
-      for(var x in data) {
+      var x = startAt;
+      for(x in data) {
+
         var img = data[x];
         cells.push("<img src='img/"+ img.imageUrl +"'>" + $overlay[0].outerHTML);
+      }
+
+      if ( startAt === 0 ) {
+        startAt = startAtMid;
+      } else {
+        startAt = 0;
       }
       $trickler.addNewRow(cells)
     });
   };
 
   getNewRow();
+
+  filepicker.setKey('AjT3Ms44nTPuEShOhyQtgz');
+
+
+  $('button').on('click', function(){
+    filepicker.pick({
+        mimetypes: ['image/*', 'text/plain'],
+        container: 'window',
+        services:['COMPUTER', 'FACEBOOK', 'GMAIL'],
+        // console.log(FPFile.url);
+      },
+      function(FPFile){
+        $.get('/addasset', {url:FPFile.url},function(){
+
+        });
+      },
+      function(FPError){
+        console.log(FPError.toString());
+      }
+    );
+  });
 
 })
 </script>
